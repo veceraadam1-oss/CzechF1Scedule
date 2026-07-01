@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>F1 Kalendář 2026 — český čas</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800;900&family=Titillium+Web:ital,wght@0,400;0,600;0,700;1,600&display=swap');
+
+:root{
+  --bg: #0a0c0e;
+  --bg2: #0e1114;
+  --surface: #15181c;
+  --surface2: #1b1f24;
+  --line: #262b31;
+  --red: #e8102b;
+  --red-dim: #7a0a19;
+  --amber: #ffb100;
+  --green: #00c875;
+  --text: #f2f4f6;
+  --muted: #8b939b;
+  --muted2: #5a6169;
+  --font-display: 'Orbitron', sans-serif;
+  --font-body: 'Titillium Web', sans-serif;
+}
+
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:
+    radial-gradient(ellipse 900px 500px at 15% -10%, rgba(232,16,43,.16), transparent 60%),
+    radial-gradient(ellipse 700px 500px at 100% 0%, rgba(255,177,0,.08), transparent 55%),
+    var(--bg);
+  color:var(--text);
+  font-family:var(--font-body);
+  -webkit-font-smoothing:antialiased;
+}
+
+::selection{background:var(--red);color:#fff;}
+
+/* ---------- HERO ---------- */
+.hero{
+  position:relative;
+  padding:56px 24px 40px;
+  overflow:hidden;
+  border-bottom:1px solid var(--line);
+  background-image:repeating-linear-gradient(
+    115deg, rgba(255,255,255,.025) 0 2px, transparent 2px 26px
+  );
+}
+.hero-inner{max-width:1180px;margin:0 auto;}
+.eyebrow{
+  font-family:var(--font-display);
+  font-size:12px;
+  letter-spacing:.35em;
+  color:var(--red);
+  font-weight:700;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.eyebrow::before{
+  content:'';
+  width:22px;height:2px;background:var(--red);display:inline-block;
+}
+h1{
+  font-family:var(--font-display);
+  font-weight:900;
+  font-size:clamp(34px, 6vw, 68px);
+  line-height:1.02;
+  margin:14px 0 6px;
+  letter-spacing:.01em;
+}
+h1 span{color:var(--red);}
+.subtitle{
+  color:var(--muted);
+  font-size:16px;
+  max-width:560px;
+  margin:0 0 34px;
+}
+
+/* start lights + countdown */
+.next-panel{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:28px 40px;
+  align-items:center;
+  background:linear-gradient(180deg, var(--surface), var(--surface2));
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:24px 28px;
+}
+.lights{display:flex;gap:10px;}
+.light{
+  width:22px;height:22px;border-radius:50%;
+  background:var(--red-dim);
+  box-shadow: inset 0 0 0 2px rgba(255,255,255,.06);
+}
+.light.on{
+  background:var(--red);
+  box-shadow:0 0 16px 3px rgba(232,16,43,.75), inset 0 0 0 2px rgba(255,255,255,.15);
+}
+.next-meta{min-width:0;}
+.next-label{
+  font-size:11px;letter-spacing:.2em;color:var(--muted2);
+  text-transform:uppercase;font-weight:700;margin-bottom:6px;
+}
+.next-title{
+  font-size:clamp(18px,2.6vw,26px);
+  font-weight:700;
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+}
+.next-title .flag{font-size:1.2em;}
+.next-sub{color:var(--muted);font-size:14px;margin-top:4px;}
+.countdown{
+  font-family:var(--font-display);
+  font-weight:800;
+  font-size:clamp(26px,4vw,40px);
+  color:var(--amber);
+  letter-spacing:.03em;
+  margin-top:10px;
+  display:flex;gap:16px;
+}
+.countdown .unit{text-align:center;}
+.countdown .unit small{
+  display:block;font-family:var(--font-body);font-weight:600;
+  font-size:10px;letter-spacing:.15em;color:var(--muted2);margin-top:2px;
+}
+
+/* ---------- TRACK STRIP ---------- */
+.strip-wrap{
+  position:sticky;top:0;z-index:20;
+  background:rgba(10,12,14,.9);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.strip{
+  max-width:1180px;margin:0 auto;
+  display:flex;gap:8px;
+  padding:12px 24px;
+  overflow-x:auto;
+  scrollbar-width:none;
+}
+.strip::-webkit-scrollbar{display:none;}
+.chip{
+  flex:0 0 auto;
+  display:flex;align-items:center;gap:6px;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:6px 12px 6px 8px;
+  font-size:12.5px;
+  color:var(--muted);
+  cursor:pointer;
+  font-weight:600;
+  transition:.15s;
+  white-space:nowrap;
+}
+.chip .num{
+  font-family:var(--font-display);
+  font-size:10px;color:var(--muted2);
+}
+.chip:hover{border-color:var(--red);color:var(--text);}
+.chip.is-next{
+  border-color:var(--amber);
+  color:var(--text);
+  box-shadow:0 0 0 1px var(--amber) inset;
+}
+.chip.is-past{opacity:.45;}
+
+/* ---------- GRID ---------- */
+main{max-width:1180px;margin:0 auto;padding:40px 24px 80px;}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(340px, 1fr));
+  gap:20px;
+}
+
+.card{
+  position:relative;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:22px 22px 18px;
+  overflow:hidden;
+  transition:border-color .15s, transform .15s;
+}
+.card::before{
+  content:'';
+  position:absolute;left:0;top:0;bottom:0;width:4px;
+  background:var(--red);
+}
+.card.is-sprint::before{background:var(--green);}
+.card.is-past{opacity:.55;}
+.card.is-next{
+  border-color:var(--amber);
+  box-shadow:0 0 0 1px var(--amber);
+}
+.card:hover{transform:translateY(-2px);}
+
+.card-top{
+  display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:14px;
+}
+.round-flag{display:flex;align-items:center;gap:12px;}
+.round-no{
+  font-family:var(--font-display);
+  font-size:22px;font-weight:800;color:var(--muted2);
+  min-width:34px;
+}
+.flag-big{font-size:30px;line-height:1;}
+.gp-name{font-size:18px;font-weight:700;line-height:1.2;}
+.gp-circuit{font-size:12.5px;color:var(--muted);margin-top:2px;}
+
+.badges{display:flex;flex-direction:column;align-items:flex-end;gap:6px;}
+.badge{
+  font-family:var(--font-display);
+  font-size:10px;letter-spacing:.12em;font-weight:700;
+  padding:4px 8px;border-radius:5px;white-space:nowrap;
+}
+.badge.sprint{background:rgba(0,200,117,.14);color:var(--green);border:1px solid rgba(0,200,117,.4);}
+.badge.next{background:rgba(255,177,0,.14);color:var(--amber);border:1px solid rgba(255,177,0,.4);}
+.badge.live{background:rgba(232,16,43,.16);color:#ff5468;border:1px solid rgba(232,16,43,.5);animation:pulse 1.4s infinite;}
+.badge.past{background:rgba(255,255,255,.05);color:var(--muted2);border:1px solid var(--line);}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+
+.weekend-range{
+  font-size:12.5px;color:var(--muted);
+  margin-bottom:16px;
+  padding-bottom:14px;
+  border-bottom:1px dashed var(--line);
+}
+.weekend-range b{color:var(--text);font-weight:600;}
+
+.sessions{display:flex;flex-direction:column;gap:2px;}
+.session{
+  display:grid;
+  grid-template-columns: 60px 1fr auto auto;
+  align-items:center;
+  gap:10px;
+  padding:8px 6px;
+  border-radius:8px;
+}
+.session:hover{background:var(--surface2);}
+.session.is-past{opacity:.4;}
+.s-day{
+  font-family:var(--font-display);
+  font-size:11px;color:var(--muted2);
+  text-transform:uppercase;
+  line-height:1.3;
+}
+.s-day .date{display:block;font-size:10px;color:var(--muted2);}
+.s-label{font-size:13.5px;font-weight:600;}
+.s-time{
+  font-family:var(--font-display);
+  font-size:15px;font-weight:700;color:var(--text);
+}
+.s-status{width:8px;height:8px;border-radius:50%;background:var(--muted2);justify-self:end;}
+.s-status.live{background:var(--red);box-shadow:0 0 8px 2px rgba(232,16,43,.7);animation:pulse 1.4s infinite;}
+.s-status.next{background:var(--amber);box-shadow:0 0 8px 2px rgba(255,177,0,.7);}
+
+footer{
+  max-width:1180px;margin:0 auto;padding:0 24px 60px;
+  color:var(--muted2);font-size:12.5px;line-height:1.7;
+  border-top:1px solid var(--line);padding-top:24px;
+}
+footer b{color:var(--muted);}
+
+@media (max-width:640px){
+  .next-panel{grid-template-columns:1fr;}
+  .countdown{gap:10px;font-size:24px;}
+  .session{grid-template-columns:52px 1fr auto;}
+  .s-status{display:none;}
+}
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow">SEZÓNA 2026 · 22 VELKÝCH CEN</div>
+    <h1>F1 <span>KALENDÁŘ</span></h1>
+    <p class="subtitle">Všechny tréninky, kvalifikace, sprinty a závody sezóny 2026 — časy automaticky přepočítané na český čas (SEČ / SELČ).</p>
+
+    <div class="next-panel">
+      <div class="lights" id="lights">
+        <div class="light"></div><div class="light"></div><div class="light"></div><div class="light"></div><div class="light"></div>
+      </div>
+      <div class="next-meta">
+        <div class="next-label">Další na programu</div>
+        <div class="next-title" id="nextTitle">Načítám…</div>
+        <div class="next-sub" id="nextSub"></div>
+        <div class="countdown" id="countdown"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="strip-wrap">
+  <div class="strip" id="strip"></div>
+</div>
+
+<main>
+  <div class="grid" id="grid"></div>
+</main>
+
+<footer>
+  <div><b>Poznámka:</b> Bahrajnská a Saúdskoarabská Velká cena byly z kalendáře 2026 zrušeny — proto číslování rovnou pokračuje z Japonska na Miami.</div>
+  <div style="margin-top:6px;">Časy sestaveny z oficiálních zdrojů (Formula1.com, Sky Sports) a automaticky převedeny do časového pásma Europe/Prague, včetně přechodu na letní čas. Doba trvání jednotlivých relací u „právě probíhá" je orientační.</div>
+</footer>
+
+<script>
+const S = {
+  FP1:'1. trénink', FP2:'2. trénink', FP3:'3. trénink',
+  SQ:'Sprintová kvalifikace', SPR:'Sprint', Q:'Kvalifikace', R:'Závod'
+};
+const DUR = { FP1:60, FP2:60, FP3:60, SQ:60, SPR:30, Q:60, R:120 };
+
+const races = [
+{r:1,flag:'🇦🇺',code:'AUS',name:'Velká cena Austrálie',circuit:'Albert Park, Melbourne',sprint:false,s:[
+  ['FP1','2026-03-06T01:30:00Z'],['FP2','2026-03-06T05:00:00Z'],['FP3','2026-03-07T01:30:00Z'],
+  ['Q','2026-03-07T05:00:00Z'],['R','2026-03-08T04:00:00Z']]},
+{r:2,flag:'🇨🇳',code:'CHN',name:'Velká cena Číny',circuit:'Shanghai International Circuit',sprint:true,s:[
+  ['FP1','2026-03-13T03:30:00Z'],['SQ','2026-03-13T07:30:00Z'],['SPR','2026-03-14T03:00:00Z'],
+  ['Q','2026-03-14T07:00:00Z'],['R','2026-03-15T07:00:00Z']]},
+{r:3,flag:'🇯🇵',code:'JPN',name:'Velká cena Japonska',circuit:'Suzuka Circuit',sprint:false,s:[
+  ['FP1','2026-03-27T02:30:00Z'],['FP2','2026-03-27T06:00:00Z'],['FP3','2026-03-28T02:30:00Z'],
+  ['Q','2026-03-28T06:00:00Z'],['R','2026-03-29T05:00:00Z']]},
+{r:4,flag:'🇺🇸',code:'MIA',name:'Velká cena Miami',circuit:'Miami International Autodrome',sprint:true,s:[
+  ['FP1','2026-05-01T16:30:00Z'],['SQ','2026-05-01T20:30:00Z'],['SPR','2026-05-02T16:00:00Z'],
+  ['Q','2026-05-02T20:00:00Z'],['R','2026-05-03T20:00:00Z']]},
+{r:5,flag:'🇨🇦',code:'CAN',name:'Velká cena Kanady',circuit:'Circuit Gilles Villeneuve',sprint:true,s:[
+  ['FP1','2026-05-22T16:30:00Z'],['SQ','2026-05-22T20:30:00Z'],['SPR','2026-05-23T16:00:00Z'],
+  ['Q','2026-05-23T20:00:00Z'],['R','2026-05-24T20:00:00Z']]},
+{r:6,flag:'🇲🇨',code:'MON',name:'Velká cena Monaka',circuit:'Circuit de Monaco',sprint:false,s:[
+  ['FP1','2026-06-05T11:30:00Z'],['FP2','2026-06-05T15:00:00Z'],['FP3','2026-06-06T10:30:00Z'],
+  ['Q','2026-06-06T14:00:00Z'],['R','2026-06-07T13:00:00Z']]},
+{r:7,flag:'🇪🇸',code:'BCN',name:'Velká cena Španělska',circuit:'Circuit de Barcelona-Catalunya',sprint:false,s:[
+  ['FP1','2026-06-12T11:30:00Z'],['FP2','2026-06-12T15:00:00Z'],['FP3','2026-06-13T10:30:00Z'],
+  ['Q','2026-06-13T14:00:00Z'],['R','2026-06-14T13:00:00Z']]},
+{r:8,flag:'🇦🇹',code:'AUT',name:'Velká cena Rakouska',circuit:'Red Bull Ring',sprint:false,s:[
+  ['FP1','2026-06-26T11:30:00Z'],['FP2','2026-06-26T15:00:00Z'],['FP3','2026-06-27T10:30:00Z'],
+  ['Q','2026-06-27T14:00:00Z'],['R','2026-06-28T13:00:00Z']]},
+{r:9,flag:'🇬🇧',code:'GBR',name:'Velká cena Velké Británie',circuit:'Silverstone Circuit',sprint:true,s:[
+  ['FP1','2026-07-03T11:30:00Z'],['SQ','2026-07-03T15:30:00Z'],['SPR','2026-07-04T11:00:00Z'],
+  ['Q','2026-07-04T15:00:00Z'],['R','2026-07-05T14:00:00Z']]},
+{r:10,flag:'🇧🇪',code:'BEL',name:'Velká cena Belgie',circuit:'Spa-Francorchamps',sprint:false,s:[
+  ['FP1','2026-07-17T11:30:00Z'],['FP2','2026-07-17T15:00:00Z'],['FP3','2026-07-18T10:30:00Z'],
+  ['Q','2026-07-18T14:00:00Z'],['R','2026-07-19T13:00:00Z']]},
+{r:11,flag:'🇭🇺',code:'HUN',name:'Velká cena Maďarska',circuit:'Hungaroring',sprint:false,s:[
+  ['FP1','2026-07-24T11:30:00Z'],['FP2','2026-07-24T15:00:00Z'],['FP3','2026-07-25T10:30:00Z'],
+  ['Q','2026-07-25T14:00:00Z'],['R','2026-07-26T13:00:00Z']]},
+{r:12,flag:'🇳🇱',code:'NED',name:'Velká cena Nizozemska',circuit:'Circuit Zandvoort',sprint:true,s:[
+  ['FP1','2026-08-21T10:30:00Z'],['SQ','2026-08-21T14:30:00Z'],['SPR','2026-08-22T10:00:00Z'],
+  ['Q','2026-08-22T14:00:00Z'],['R','2026-08-23T13:00:00Z']]},
+{r:13,flag:'🇮🇹',code:'ITA',name:'Velká cena Itálie',circuit:'Autodromo Nazionale Monza',sprint:false,s:[
+  ['FP1','2026-09-04T10:30:00Z'],['FP2','2026-09-04T14:00:00Z'],['FP3','2026-09-05T10:30:00Z'],
+  ['Q','2026-09-05T14:00:00Z'],['R','2026-09-06T13:00:00Z']]},
+{r:14,flag:'🇪🇸',code:'MAD',name:'Velká cena Španělska (Madrid)',circuit:'Circuito de Madring',sprint:false,s:[
+  ['FP1','2026-09-11T11:30:00Z'],['FP2','2026-09-11T15:00:00Z'],['FP3','2026-09-12T10:30:00Z'],
+  ['Q','2026-09-12T14:00:00Z'],['R','2026-09-13T13:00:00Z']]},
+{r:15,flag:'🇦🇿',code:'AZE',name:'Velká cena Ázerbájdžánu',circuit:'Baku City Circuit',sprint:false,s:[
+  ['FP1','2026-09-24T08:30:00Z'],['FP2','2026-09-24T12:00:00Z'],['FP3','2026-09-25T08:30:00Z'],
+  ['Q','2026-09-25T12:00:00Z'],['R','2026-09-26T11:00:00Z']]},
+{r:16,flag:'🇸🇬',code:'SGP',name:'Velká cena Singapuru',circuit:'Marina Bay Street Circuit',sprint:true,s:[
+  ['FP1','2026-10-09T08:30:00Z'],['SQ','2026-10-09T12:30:00Z'],['SPR','2026-10-10T09:00:00Z'],
+  ['Q','2026-10-10T13:00:00Z'],['R','2026-10-11T12:00:00Z']]},
+{r:17,flag:'🇺🇸',code:'USA',name:'Velká cena USA',circuit:'Circuit of the Americas, Austin',sprint:false,s:[
+  ['FP1','2026-10-23T17:30:00Z'],['FP2','2026-10-23T21:00:00Z'],['FP3','2026-10-24T17:30:00Z'],
+  ['Q','2026-10-24T21:00:00Z'],['R','2026-10-25T20:00:00Z']]},
+{r:18,flag:'🇲🇽',code:'MEX',name:'Velká cena Mexika',circuit:'Autódromo Hermanos Rodríguez',sprint:false,s:[
+  ['FP1','2026-10-30T18:30:00Z'],['FP2','2026-10-30T22:00:00Z'],['FP3','2026-10-31T17:30:00Z'],
+  ['Q','2026-10-31T21:00:00Z'],['R','2026-11-01T20:00:00Z']]},
+{r:19,flag:'🇧🇷',code:'BRA',name:'Velká cena Brazílie',circuit:'Autódromo José Carlos Pace, Interlagos',sprint:false,s:[
+  ['FP1','2026-11-06T15:30:00Z'],['FP2','2026-11-06T19:00:00Z'],['FP3','2026-11-07T14:30:00Z'],
+  ['Q','2026-11-07T18:00:00Z'],['R','2026-11-08T17:00:00Z']]},
+{r:20,flag:'🇺🇸',code:'LAS',name:'Velká cena Las Vegas',circuit:'Las Vegas Street Circuit',sprint:false,s:[
+  ['FP1','2026-11-20T00:30:00Z'],['FP2','2026-11-20T04:00:00Z'],['FP3','2026-11-21T00:30:00Z'],
+  ['Q','2026-11-21T04:00:00Z'],['R','2026-11-22T04:00:00Z']]},
+{r:21,flag:'🇶🇦',code:'QAT',name:'Velká cena Kataru',circuit:'Lusail International Circuit',sprint:false,s:[
+  ['FP1','2026-11-27T13:30:00Z'],['FP2','2026-11-27T17:00:00Z'],['FP3','2026-11-28T14:30:00Z'],
+  ['Q','2026-11-28T18:00:00Z'],['R','2026-11-29T16:00:00Z']]},
+{r:22,flag:'🇦🇪',code:'ABU',name:'Velká cena Abú Zabí',circuit:'Yas Marina Circuit',sprint:false,s:[
+  ['FP1','2026-12-04T09:30:00Z'],['FP2','2026-12-04T13:00:00Z'],['FP3','2026-12-05T10:30:00Z'],
+  ['Q','2026-12-05T14:00:00Z'],['R','2026-12-06T13:00:00Z']]},
+];
+
+const TZ = 'Europe/Prague';
+const dayFmt = new Intl.DateTimeFormat('cs-CZ', {weekday:'short', timeZone:TZ});
+const dateFmt = new Intl.DateTimeFormat('cs-CZ', {day:'numeric', month:'numeric', timeZone:TZ});
+const dateLongFmt = new Intl.DateTimeFormat('cs-CZ', {day:'numeric', month:'long', timeZone:TZ});
+const yearFmt = new Intl.DateTimeFormat('cs-CZ', {year:'numeric', timeZone:TZ});
+const timeFmt = new Intl.DateTimeFormat('cs-CZ', {hour:'2-digit', minute:'2-digit', hour12:false, timeZone:TZ});
+
+function weekendRange(sessions){
+  const first = new Date(sessions[0][1]);
+  const last = new Date(sessions[sessions.length-1][1]);
+  const d1 = dateFmt.format(first).split('.')[0];
+  const d2 = dateLongFmt.format(last);
+  const yr = yearFmt.format(last);
+  return `<b>${d1}.</b>–<b>${d2}</b> ${yr}`;
+}
+
+function buildGrid(){
+  const grid = document.getElementById('grid');
+  const strip = document.getElementById('strip');
+  const now = new Date();
+
+  let allSessions = [];
+  races.forEach(race => race.s.forEach(([code,iso]) => allSessions.push({race, code, iso, t:new Date(iso)})));
+  allSessions.sort((a,b)=>a.t-b.t);
+  const nextSession = allSessions.find(x => x.t > now);
+
+  races.forEach(race => {
+    const lastSessionTime = new Date(race.s[race.s.length-1][1]);
+    const raceIsNext = nextSession && nextSession.race.r === race.r;
+    const raceIsPast = lastSessionTime < now && !raceIsNext;
+
+    const chip = document.createElement('div');
+    chip.className = 'chip' + (raceIsNext ? ' is-next' : '') + (raceIsPast ? ' is-past' : '');
+    chip.innerHTML = `<span class="num">${String(race.r).padStart(2,'0')}</span> ${race.flag} ${race.code}`;
+    chip.onclick = () => document.getElementById('card-'+race.r).scrollIntoView({behavior:'smooth', block:'center'});
+    strip.appendChild(chip);
+
+    const card = document.createElement('div');
+    card.className = 'card' + (race.sprint ? ' is-sprint' : '') + (raceIsPast ? ' is-past' : '') + (raceIsNext ? ' is-next' : '');
+    card.id = 'card-'+race.r;
+
+    let badgesHtml = '';
+    if(race.sprint) badgesHtml += `<span class="badge sprint">SPRINT</span>`;
+    if(raceIsNext) badgesHtml += `<span class="badge next">DALŠÍ</span>`;
+    else if(raceIsPast) badgesHtml += `<span class="badge past">PROBĚHLO</span>`;
+
+    let sessionsHtml = '';
+    race.s.forEach(([code, iso]) => {
+      const t = new Date(iso);
+      const dur = DUR[code] || 60;
+      const end = new Date(t.getTime() + dur*60000);
+      const isPast = now > end;
+      const isLive = now >= t && now <= end;
+      const isNextOne = nextSession && nextSession.code===code && nextSession.race.r===race.r;
+      let statusClass = '';
+      if(isLive) statusClass = 'live';
+      else if(isNextOne) statusClass = 'next';
+
+      sessionsHtml += `
+        <div class="session ${isPast?'is-past':''}">
+          <div class="s-day">${dayFmt.format(t)}<span class="date">${dateFmt.format(t)}</span></div>
+          <div class="s-label">${S[code]}</div>
+          <div class="s-time">${timeFmt.format(t)}</div>
+          <div class="s-status ${statusClass}"></div>
+        </div>`;
+    });
+
+    card.innerHTML = `
+      <div class="card-top">
+        <div class="round-flag">
+          <div class="round-no">${String(race.r).padStart(2,'0')}</div>
+          <div class="flag-big">${race.flag}</div>
+          <div>
+            <div class="gp-name">${race.name}</div>
+            <div class="gp-circuit">${race.circuit}</div>
+          </div>
+        </div>
+        <div class="badges">${badgesHtml}</div>
+      </div>
+      <div class="weekend-range">Víkend: ${weekendRange(race.s)}</div>
+      <div class="sessions">${sessionsHtml}</div>
+    `;
+    grid.appendChild(card);
+  });
+
+  return nextSession;
+}
+
+function startCountdown(nextSession){
+  const titleEl = document.getElementById('nextTitle');
+  const subEl = document.getElementById('nextSub');
+  const cdEl = document.getElementById('countdown');
+  const lights = document.querySelectorAll('.light');
+
+  if(!nextSession){
+    titleEl.textContent = 'Sezóna 2026 skončila 🏁';
+    subEl.textContent = 'Uvidíme se v roce 2027.';
+    cdEl.textContent = '';
+    return;
+  }
+
+  titleEl.innerHTML = `<span class="flag">${nextSession.race.flag}</span> ${S[nextSession.code]} — ${nextSession.race.name}`;
+  subEl.textContent = `${dayFmt.format(nextSession.t)} ${dateLongFmt.format(nextSession.t)} v ${timeFmt.format(nextSession.t)} (českého času)`;
+
+  let lightIdx = 0;
+  setInterval(()=>{
+    lights.forEach((l,i)=> l.classList.toggle('on', i<=lightIdx));
+    lightIdx = (lightIdx+1)%6;
+    if(lightIdx===5){ lights.forEach(l=>l.classList.remove('on')); }
+  }, 500);
+
+  function tick(){
+    const diff = nextSession.t - new Date();
+    if(diff <= 0){ location.reload(); return; }
+    const d = Math.floor(diff/86400000);
+    const h = Math.floor(diff%86400000/3600000);
+    const m = Math.floor(diff%3600000/60000);
+    const s = Math.floor(diff%60000/1000);
+    cdEl.innerHTML = `
+      <div class="unit">${String(d).padStart(2,'0')}<small>DNÍ</small></div>
+      <div class="unit">${String(h).padStart(2,'0')}<small>HOD</small></div>
+      <div class="unit">${String(m).padStart(2,'0')}<small>MIN</small></div>
+      <div class="unit">${String(s).padStart(2,'0')}<small>SEK</small></div>
+    `;
+  }
+  tick();
+  setInterval(tick, 1000);
+}
+
+const next = buildGrid();
+startCountdown(next);
+
+window.addEventListener('load', () => {
+  const el = document.querySelector('.chip.is-next');
+  if(el) el.scrollIntoView({inline:'center', block:'nearest'});
+});
+</script>
+</body>
+</html>
